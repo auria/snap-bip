@@ -1,0 +1,33 @@
+name: bip-aluria
+version: "0.9.0-rc1"
+summary: multiuser irc proxy with conversation replay and more
+description: |
+ Bip is a IRC proxy that supports replaying logged conversation when a client
+ connects, multiple clients on one irc server connection, It has a handy
+ logging directory structure. It is multiuser, and has a flexible
+ configuration. Some of its configuration can be changed at runtime with
+ special irc commands.
+
+confinement: strict
+grade: devel
+apps:
+  bip:
+    command: bin/bip
+    plugs: [network, network-bind, home]
+
+parts:
+  bip:
+    plugin: autotools
+    source: https://vcs-git.duckcorp.org/projects/bip/bip.git
+    source-tag: release-0.9.0-rc1
+    configflags:
+      - '--enable-oidentd'
+    build-packages:
+      - automake
+      - autoconf
+      - bison
+      - flex
+      - libssl-dev
+    prepare: |
+      #!/bin/bash -ex
+      sed -i -e 's/^AM_CFLAGS=/#AM_CFLAGS=/' Makefile.am
